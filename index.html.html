@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InOut Control — Trazabilidad total de tu equipo en campo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1B6B45;
+    --green-mid: #2D9A65;
+    --green-light: #4AC B84;
+    --green-pale: #E8F5EF;
+    --green-xpale: #F2FAF6;
+    --teal: #0A7C6E;
+    --dark: #0A1A10;
+    --dark2: #142B1C;
+    --amber: #F59E0B;
+    --red: #EF4444;
+    --text: #0F1F17;
+    --text2: #3D5247;
+    --text3: #6B8A7A;
+    --border: rgba(27,107,69,0.12);
+    --border2: rgba(27,107,69,0.2);
+    --bg: #FAFCFB;
+    --white: #ffffff;
+    --r: 12px;
+    --r-lg: 20px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ——— NAV ——— */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 5%;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(250,252,251,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: all .3s;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-mark {
+    width: 36px; height: 36px; background: var(--green); border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-mark svg { width: 20px; height: 20px; }
+  .nav-logo-text { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -.02em; }
+  .nav-links { display: flex; gap: 2px; align-items: center; }
+  .nav-links a {
+    font-size: 14px; color: var(--text2); text-decoration: none; padding: 6px 12px;
+    border-radius: 8px; font-weight: 500; transition: all .2s;
+  }
+  .nav-links a:hover { background: var(--green-xpale); color: var(--green); }
+  .nav-cta {
+    background: var(--green); color: #fff !important; padding: 8px 18px !important;
+    border-radius: 8px; font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: var(--green-mid) !important; transform: translateY(-1px); }
+  .nav-mobile-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+
+  /* ——— HERO ——— */
+  #hero {
+    min-height: 100vh;
+    padding: 120px 5% 80px;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    background: var(--dark);
+  }
+  .hero-bg {
+    position: absolute; inset: 0; overflow: hidden;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(27,107,69,0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 20% 70%, rgba(10,124,110,0.2) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: .07;
+    background-image: linear-gradient(var(--green-pale) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--green-pale) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .hero-inner {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(45,154,101,.15); border: 1px solid rgba(45,154,101,.3);
+    color: #4ACBA0; font-size: 12px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .hero-eyebrow span { width: 6px; height: 6px; background: #4ACBA0; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+  .hero-headline {
+    font-size: clamp(38px, 5vw, 62px); font-weight: 900; line-height: 1.05;
+    letter-spacing: -.03em; color: #fff; margin-bottom: 20px;
+  }
+  .hero-headline em { font-style: normal; color: #4ACBA0; }
+  .hero-sub {
+    font-size: 18px; color: rgba(255,255,255,.65); line-height: 1.65;
+    margin-bottom: 36px; max-width: 440px;
+  }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green-mid); color: #fff; border: none;
+    padding: 14px 28px; border-radius: var(--r); font-size: 15px; font-weight: 700;
+    cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { background: #38BD78; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(45,154,101,.4); }
+  .btn-ghost {
+    background: rgba(255,255,255,.08); color: rgba(255,255,255,.85); border: 1px solid rgba(255,255,255,.15);
+    padding: 14px 24px; border-radius: var(--r); font-size: 15px; font-weight: 500;
+    cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.3); }
+  .hero-stats {
+    display: flex; gap: 28px; margin-top: 44px;
+    padding-top: 28px; border-top: 1px solid rgba(255,255,255,.1);
+  }
+  .hero-stat-val { font-size: 28px; font-weight: 900; color: #fff; letter-spacing: -.02em; }
+  .hero-stat-label { font-size: 12px; color: rgba(255,255,255,.45); font-weight: 500; margin-top: 2px; }
+
+  /* Hero app mockup */
+  .hero-visual { position: relative; }
+  .app-frame {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px; overflow: hidden; padding: 16px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05);
+    animation: floatUp 6s ease-in-out infinite;
+  }
+  @keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .app-topbar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+    padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .app-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .app-topbar-title {
+    margin-left: auto; font-size: 13px; color: rgba(255,255,255,.5);
+    font-family: 'DM Mono', monospace;
+  }
+  .app-map {
+    background: #142B1C; border-radius: 12px; height: 200px; position: relative; overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .map-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(45,154,101,.15) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(45,154,101,.15) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .map-route {
+    position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px;
+  }
+  .map-pin {
+    position: absolute; width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+  }
+  .map-pin.green { background: var(--green-mid); box-shadow: 0 0 0 6px rgba(45,154,101,.2); }
+  .map-pin.amber { background: var(--amber); box-shadow: 0 0 0 6px rgba(245,158,11,.2); }
+  .map-pin.teal { background: var(--teal); box-shadow: 0 0 0 6px rgba(10,124,110,.2); }
+  .map-label { font-size: 10px; color: rgba(255,255,255,.7); font-family: 'DM Mono', monospace; position: absolute; white-space: nowrap; }
+  .app-tasks { display: flex; flex-direction: column; gap: 8px; }
+  .task-row {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,.04); border-radius: 8px; padding: 10px 12px;
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .task-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .task-name { font-size: 12px; color: rgba(255,255,255,.75); font-weight: 500; flex: 1; }
+  .task-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+  }
+  .badge-done { background: rgba(45,154,101,.2); color: #4ACBA0; }
+  .badge-live { background: rgba(245,158,11,.2); color: #F59E0B; }
+  .badge-pending { background: rgba(107,138,122,.15); color: #6B8A7A; }
+  .app-notification {
+    position: absolute; top: -20px; right: -20px;
+    background: var(--amber); color: var(--dark); border-radius: 12px;
+    padding: 8px 14px; font-size: 12px; font-weight: 700;
+    box-shadow: 0 8px 24px rgba(245,158,11,.4);
+    white-space: nowrap; z-index: 5;
+    animation: slideIn .5s ease .3s both;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ——— TRUST BAR ——— */
+  #trust {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 28px 5%;
+    display: flex; align-items: center; justify-content: center; gap: 48px;
+    flex-wrap: wrap;
+  }
+  .trust-label { font-size: 12px; font-weight: 600; color: var(--text3); letter-spacing: .07em; text-transform: uppercase; }
+  .trust-logos { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .trust-logo {
+    font-size: 14px; font-weight: 700; color: var(--text3); letter-spacing: -.01em; opacity: .6;
+    transition: opacity .2s;
+  }
+  .trust-logo:hover { opacity: 1; }
+
+  /* ——— PROBLEM ——— */
+  #problem { padding: 100px 5%; background: var(--bg); }
+  .section-eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 16px;
+  }
+  .section-headline {
+    font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -.025em;
+    color: var(--text); line-height: 1.1; margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 17px; color: var(--text2); line-height: 1.65;
+    max-width: 540px; margin-bottom: 56px;
+  }
+  .pain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .pain-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r-lg); padding: 28px 28px 24px;
+    transition: all .25s; position: relative; overflow: hidden;
+  }
+  .pain-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--red), #FF6B6B);
+    transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  .pain-card:hover::before { transform: scaleX(1); }
+  .pain-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,.08); }
+  .pain-icon {
+    width: 44px; height: 44px; background: #FEF2F2; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+  }
+  .pain-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -.01em; }
+  .pain-desc { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+  /* ——— HOW IT WORKS ——— */
+  #how { padding: 100px 5%; background: var(--dark); position: relative; overflow: hidden; }
+  #how::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(27,107,69,.25) 0%, transparent 70%);
+  }
+  .how-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; }
+  .how-header { text-align: center; margin-bottom: 72px; }
+  .how-header .section-eyebrow { color: #4ACBA0; }
+  .how-header .section-headline { color: #fff; }
+  .how-header .section-sub { color: rgba(255,255,255,.55); margin: 0 auto; }
+  .how-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
+  .how-connector {
+    position: absolute; top: 32px; left: 10%; right: 10%;
+    height: 1px; background: linear-gradient(90deg, transparent, rgba(45,154,101,.4) 20%, rgba(45,154,101,.4) 80%, transparent);
+    z-index: 0;
+  }
+  .how-step { text-align: center; padding: 0 12px; position: relative; z-index: 1; }
+  .how-step-num {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(45,154,101,.3); background: rgba(27,107,69,.2);
+    font-size: 22px; font-weight: 900; color: #4ACBA0;
+    position: relative; transition: all .3s;
+  }
+  .how-step:hover .how-step-num { background: var(--green); border-color: var(--green); color: #fff; transform: scale(1.1); }
+  .how-step-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .how-step-desc { font-size: 13px; color: rgba(255,255,255,.45); line-height: 1.5; }
+
+  /* ——— FEATURES ——— */
+  #features { padding: 100px 5%; background: var(--bg); }
+  .features-inner { max-width: 1200px; margin: 0 auto; }
+  .feature-block {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center;
+    margin-bottom: 96px;
+  }
+  .feature-block:last-child { margin-bottom: 0; }
+  .feature-block.reverse { direction: rtl; }
+  .feature-block.reverse > * { direction: ltr; }
+  .feature-tag {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--green);
+    background: var(--green-pale); padding: 5px 12px; border-radius: 100px; margin-bottom: 20px;
+  }
+  .feature-title { font-size: clamp(24px,3vw,36px); font-weight: 900; letter-spacing: -.025em; color: var(--text); margin-bottom: 16px; line-height: 1.15; }
+  .feature-desc { font-size: 16px; color: var(--text2); line-height: 1.7; margin-bottom: 28px; }
+  .feature-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; color: var(--text2);
+  }
+  .feature-list li::before {
+    content: ''; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--green-pale); border: 1.5px solid var(--green-mid);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%232D9A65' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-size: 12px; background-repeat: no-repeat; background-position: center;
+  }
+  .feature-visual {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r-lg); overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,.07);
+  }
+  .feature-visual-header {
+    background: var(--green); padding: 14px 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .fv-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.3); }
+  .fv-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.9); margin-left: 4px; }
+  .feature-visual-body { padding: 20px; }
+
+  /* QR UI */
+  .qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .qr-card {
+    background: var(--green-xpale); border-radius: 10px; padding: 14px;
+    border: 1px solid var(--border);
+  }
+  .qr-card-title { font-size: 11px; font-weight: 700; color: var(--green); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
+  .qr-card-val { font-size: 15px; font-weight: 700; color: var(--text); font-family: 'DM Mono', monospace; }
+  .qr-card-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .qr-event {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    background: var(--bg); border-radius: 8px; margin-bottom: 8px;
+    border: 1px solid var(--border);
+  }
+  .qr-event-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .qr-event-text { font-size: 12px; color: var(--text2); flex: 1; }
+  .qr-event-time { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+  /* Map UI */
+  .map-ui { background: var(--dark2); border-radius: 10px; padding: 16px; margin-bottom: 12px; position: relative; overflow: hidden; height: 180px; }
+  .map-ui-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(45,154,101,.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(45,154,101,.1) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .map-ui-pin {
+    position: absolute; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 10px;
+    font-weight: 700; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.4);
+  }
+  .map-ui-label {
+    position: absolute; font-size: 10px; color: rgba(255,255,255,.6);
+    font-family: 'DM Mono', monospace; white-space: nowrap;
+  }
+
+  /* Chat UI */
+  .chat-messages { display: flex; flex-direction: column; gap: 8px; }
+  .chat-msg {
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .chat-msg.out { flex-direction: row-reverse; }
+  .chat-avatar {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+  }
+  .chat-bubble {
+    max-width: 75%; padding: 8px 12px; border-radius: 12px;
+    font-size: 13px; line-height: 1.5;
+  }
+  .chat-msg.in .chat-bubble { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 2px 12px 12px 12px; }
+  .chat-msg.out .chat-bubble { background: var(--green); color: #fff; border-radius: 12px 2px 12px 12px; }
+  .chat-geo { font-size: 10px; font-family: 'DM Mono', monospace; opacity: .6; margin-top: 3px; }
+
+  /* Form UI */
+  .form-ui { display: flex; flex-direction: column; gap: 8px; }
+  .form-field { background: var(--bg); border-radius: 8px; padding: 12px 14px; border: 1px solid var(--border); }
+  .form-field-label { font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 4px; letter-spacing: .04em; }
+  .form-field-val { font-size: 13px; color: var(--text); font-weight: 500; }
+  .form-field-val.filled { color: var(--green); }
+  .form-progress { display: flex; gap: 6px; margin-top: 12px; }
+  .form-prog-dot { flex: 1; height: 4px; border-radius: 2px; background: var(--border); }
+  .form-prog-dot.done { background: var(--green-mid); }
+  .form-prog-dot.active { background: var(--amber); }
+
+  /* ——— INDUSTRIES ——— */
+  #industries { padding: 100px 5%; background: var(--white); }
+  .industries-inner { max-width: 1200px; margin: 0 auto; }
+  .industries-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; flex-wrap: wrap; gap: 20px; }
+  .industry-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .industry-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg);
+    padding: 24px 20px; text-align: center; cursor: pointer;
+    transition: all .25s; text-decoration: none; color: var(--text);
+  }
+  .industry-card:hover { background: var(--green); border-color: var(--green); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(27,107,69,.3); }
+  .industry-card:hover .industry-icon { background: rgba(255,255,255,.15); }
+  .industry-card:hover .industry-name { color: #fff; }
+  .industry-card:hover .industry-desc { color: rgba(255,255,255,.7); }
+  .industry-icon {
+    width: 52px; height: 52px; margin: 0 auto 14px;
+    background: var(--green-pale); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+    transition: background .25s;
+  }
+  .industry-name { font-size: 13px; font-weight: 700; margin-bottom: 6px; transition: color .25s; }
+  .industry-desc { font-size: 12px; color: var(--text3); line-height: 1.4; transition: color .25s; }
+
+  /* ——— TESTIMONIALS ——— */
+  #testimonials { padding: 100px 5%; background: var(--green-xpale); }
+  .testimonials-inner { max-width: 1200px; margin: 0 auto; }
+  .testi-header { text-align: center; margin-bottom: 56px; }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testi-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r-lg); padding: 28px 28px 24px;
+    transition: all .25s;
+  }
+  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,.07); }
+  .testi-quote {
+    font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 24px;
+    font-style: italic;
+  }
+  .testi-quote::before { content: '"'; font-size: 40px; color: var(--green-pale); line-height: 0; vertical-align: -18px; margin-right: 4px; font-family: Georgia, serif; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .testi-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .testi-role { font-size: 12px; color: var(--text3); }
+
+  /* ——— STATS ——— */
+  #stats { padding: 80px 5%; background: var(--dark); position: relative; overflow: hidden; }
+  #stats::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 100% at 50% 50%, rgba(27,107,69,.3) 0%, transparent 70%);
+  }
+  .stats-inner { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; text-align: center; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .stat-val { font-size: clamp(44px, 6vw, 72px); font-weight: 900; color: #fff; letter-spacing: -.04em; line-height: 1; }
+  .stat-val span { color: #4ACBA0; }
+  .stat-label { font-size: 14px; color: rgba(255,255,255,.45); margin-top: 10px; font-weight: 500; }
+
+  /* ——— FINAL CTA ——— */
+  #cta-final {
+    padding: 100px 5%; background: var(--green);
+    text-align: center; position: relative; overflow: hidden;
+  }
+  #cta-final::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(255,255,255,.08) 0%, transparent 70%);
+  }
+  .cta-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+  .cta-headline { font-size: clamp(28px, 4vw, 48px); font-weight: 900; color: #fff; letter-spacing: -.025em; line-height: 1.1; margin-bottom: 18px; }
+  .cta-sub { font-size: 17px; color: rgba(255,255,255,.7); margin-bottom: 40px; line-height: 1.6; }
+  .btn-white {
+    background: #fff; color: var(--green); border: none;
+    padding: 16px 32px; border-radius: var(--r); font-size: 16px; font-weight: 700;
+    cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-white:hover { background: var(--green-pale); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,.2); }
+  .cta-reassure { font-size: 13px; color: rgba(255,255,255,.5); margin-top: 18px; }
+
+  /* ——— FOOTER ——— */
+  footer {
+    background: var(--dark); padding: 48px 5% 32px;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; flex-wrap: wrap; gap: 32px; }
+  .footer-brand { max-width: 260px; }
+  .footer-brand p { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.65; margin-top: 12px; }
+  .footer-links { display: flex; gap: 48px; flex-wrap: wrap; }
+  .footer-col-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 14px; }
+  .footer-link-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .footer-link-list a { font-size: 14px; color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
+  .footer-link-list a:hover { color: #4ACBA0; }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    padding-top: 24px; border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,.25); }
+  .footer-langs { display: flex; gap: 8px; }
+  .footer-lang {
+    font-size: 12px; font-weight: 600; color: rgba(255,255,255,.3);
+    cursor: pointer; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.1);
+    transition: all .2s; background: none;
+  }
+  .footer-lang.active, .footer-lang:hover { color: #4ACBA0; border-color: rgba(74,203,160,.3); background: rgba(74,203,160,.07); }
+
+  /* ——— SCROLL REVEAL ——— */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+  .reveal-delay-4 { transition-delay: .4s; }
+
+  /* ——— RESPONSIVE ——— */
+  @media (max-width: 1024px) {
+    .how-steps { grid-template-columns: 1fr 1fr 1fr; }
+    .how-steps .how-step:nth-child(4), .how-steps .how-step:nth-child(5) { margin-top: 32px; }
+    .how-connector { display: none; }
+    .industry-grid { grid-template-columns: repeat(3, 1fr); }
+    .testi-grid { grid-template-columns: 1fr 1fr; }
+    .testi-grid .testi-card:last-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 0 4%; }
+    .nav-links { display: none; }
+    .nav-mobile-btn { display: flex; }
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .hero-visual { order: -1; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .how-steps { grid-template-columns: 1fr 1fr; }
+    .feature-block { grid-template-columns: 1fr; gap: 36px; }
+    .feature-block.reverse { direction: ltr; }
+    .industry-grid { grid-template-columns: repeat(2, 1fr); }
+    .testi-grid { grid-template-columns: 1fr; }
+    .testi-grid .testi-card:last-child { grid-column: auto; }
+    .stats-grid { grid-template-columns: 1fr; gap: 32px; }
+    .footer-top { flex-direction: column; }
+    .industries-header { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 480px) {
+    #hero { padding: 100px 4% 60px; }
+    .hero-stats { gap: 20px; flex-wrap: wrap; }
+    .how-steps { grid-template-columns: 1fr; }
+    .industry-grid { grid-template-columns: 1fr 1fr; }
+    .qr-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="3.5" fill="white"/>
+        <path d="M10 3V1M10 19v-2M3 10H1M19 10h-2M4.93 4.93l-1.41-1.41M16.48 16.48l-1.41-1.41M4.93 15.07l-1.41 1.41M16.48 3.52l-1.41 1.41" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">InOut Control</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how">Cómo funciona</a>
+    <a href="#features">Funcionalidades</a>
+    <a href="#industries">Industrias</a>
+    <a href="#" style="color: var(--text2);">Precios</a>
+    <a href="#cta-final" class="nav-cta">Solicitar demo</a>
+  </div>
+  <button class="nav-mobile-btn" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="#1B6B45" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span></span>
+        Plataforma 100% en la nube
+      </div>
+      <h1 class="hero-headline">
+        Tu equipo en campo,<br>
+        <em>completamente visible.</em>
+      </h1>
+      <p class="hero-sub">
+        Trazabilidad total de tareas, personas y ubicaciones — con evidencia en tiempo real. Sin WhatsApp. Sin reportes tardíos. Sin suposiciones.
+      </p>
+      <div class="hero-actions">
+        <a href="#cta-final" class="btn-primary">
+          Solicitar demo gratuita
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#how" class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 .73-.47 1.35-1.13 1.58L8 7.75V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11" r=".75" fill="currentColor"/></svg>
+          Ver cómo funciona
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-val">+30</div>
+          <div class="hero-stat-label">Empresas activas</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">+4</div>
+          <div class="hero-stat-label">Países</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">100%</div>
+          <div class="hero-stat-label">Cloud / Online</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div style="position: relative;">
+        <div class="app-notification">⚡ Tarea completada — Sector B3</div>
+        <div class="app-frame">
+          <div class="app-topbar">
+            <div class="app-dot" style="background:#4ACBA0"></div>
+            <div class="app-dot" style="background:#F59E0B"></div>
+            <div class="app-dot" style="background:#EF4444"></div>
+            <div class="app-topbar-title">InOut Control — Live</div>
+          </div>
+          <div class="app-map">
+            <div class="map-grid"></div>
+            <div class="map-route" style="position:relative;">
+              <div class="map-pin green" style="top:20%;left:25%;">📍</div>
+              <div class="map-label" style="top:calc(20% + 30px);left:20%;">Carlos R.</div>
+              <div class="map-pin amber" style="top:50%;left:60%;">📍</div>
+              <div class="map-label" style="top:calc(50% + 30px);left:55%;">María L.</div>
+              <div class="map-pin teal" style="top:70%;left:40%;">📍</div>
+              <div class="map-label" style="top:calc(70% + 30px);left:35%;">Juan P.</div>
+            </div>
+          </div>
+          <div class="app-tasks">
+            <div class="task-row">
+              <div class="task-dot" style="background:#4ACBA0"></div>
+              <div class="task-name">Inspección zona norte</div>
+              <div class="task-badge badge-done">✓ Completado</div>
+            </div>
+            <div class="task-row">
+              <div class="task-dot" style="background:#F59E0B"></div>
+              <div class="task-name">Ruta de distribución #7</div>
+              <div class="task-badge badge-live">● En curso</div>
+            </div>
+            <div class="task-row">
+              <div class="task-dot" style="background:#6B8A7A"></div>
+              <div class="task-name">Control de inventario</div>
+              <div class="task-badge badge-pending">○ Pendiente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div id="trust">
+  <span class="trust-label">Confían en InOut Control</span>
+  <div class="trust-logos">
+    <div class="trust-logo">AgroSur</div>
+    <div class="trust-logo">LogiPack</div>
+    <div class="trust-logo">SecureGroup</div>
+    <div class="trust-logo">FincaVerde</div>
+    <div class="trust-logo">DistriCo</div>
+    <div class="trust-logo">FieldOps</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div class="reveal">
+      <div class="section-eyebrow">El problema</div>
+      <h2 class="section-headline">Operar en campo sin visibilidad<br>tiene un costo real.</h2>
+      <p class="section-sub">¿Le suena familiar? Equipos en terreno, órdenes por WhatsApp, reportes que llegan horas tarde. La gerencia toma decisiones sin datos reales.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card reveal reveal-delay-1">
+        <div class="pain-icon">🔍</div>
+        <div class="pain-title">Sin trazabilidad</div>
+        <div class="pain-desc">No sabe si las tareas se ejecutaron, cuándo ni desde dónde. Todo queda en la memoria de las personas.</div>
+      </div>
+      <div class="pain-card reveal reveal-delay-2">
+        <div class="pain-icon">⏰</div>
+        <div class="pain-title">Información tardía</div>
+        <div class="pain-desc">Los reportes llegan horas después — cuando ya no es posible tomar acción a tiempo.</div>
+      </div>
+      <div class="pain-card reveal reveal-delay-3">
+        <div class="pain-icon">📱</div>
+        <div class="pain-title">Coordinación sin registro</div>
+        <div class="pain-desc">Órdenes por WhatsApp, llamadas y acuerdos informales que no dejan evidencia ni trazabilidad.</div>
+      </div>
+      <div class="pain-card reveal reveal-delay-4">
+        <div class="pain-icon">📊</div>
+        <div class="pain-title">Decisiones sin datos reales</div>
+        <div class="pain-desc">La gerencia opera con información desactualizada y no puede medir el desempeño real del equipo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-inner">
+    <div class="how-header reveal">
+      <div class="section-eyebrow">Cómo funciona</div>
+      <h2 class="section-headline" style="color:#fff;">Ciclo operativo completo<br>en tiempo real.</h2>
+      <p class="section-sub">Desde la asignación de tareas hasta el reporte ejecutivo — en una sola plataforma.</p>
+    </div>
+    <div style="position: relative;">
+      <div class="how-connector"></div>
+      <div class="how-steps">
+        <div class="how-step reveal reveal-delay-1">
+          <div class="how-step-num">01</div>
+          <div class="how-step-title">Crea & asigna</div>
+          <div class="how-step-desc">Tareas, formularios y puntos de control con responsables.</div>
+        </div>
+        <div class="how-step reveal reveal-delay-2">
+          <div class="how-step-num">02</div>
+          <div class="how-step-title">Ejecución en campo</div>
+          <div class="how-step-desc">El equipo escanea QR, llena formularios y registra actividad.</div>
+        </div>
+        <div class="how-step reveal reveal-delay-3">
+          <div class="how-step-num">03</div>
+          <div class="how-step-title">Trazabilidad completa</div>
+          <div class="how-step-desc">Hora exacta, foto y GPS de cada acción quedan registradas.</div>
+        </div>
+        <div class="how-step reveal reveal-delay-4">
+          <div class="how-step-num">04</div>
+          <div class="how-step-title">Alertas automáticas</div>
+          <div class="how-step-desc">Notificaciones inmediatas si algo no se cumple a tiempo.</div>
+        </div>
+        <div class="how-step reveal" style="transition-delay:.5s">
+          <div class="how-step-num">05</div>
+          <div class="how-step-title">Reportes & Big Data</div>
+          <div class="how-step-desc">Historial auditable, PDFs y datos listos para decisiones.</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top: 48px;" class="reveal">
+      <div style="font-size: 13px; color: rgba(255,255,255,.35); font-family: 'DM Mono', monospace;">
+        iOS · Android · Web · Sincronización online / offline
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="features-inner">
+    <div style="text-align: center; margin-bottom: 72px;" class="reveal">
+      <div class="section-eyebrow">Funcionalidades</div>
+      <h2 class="section-headline">Todo lo que necesita para<br>controlar operaciones en campo.</h2>
+    </div>
+
+    <!-- F1: QR Traceability -->
+    <div class="feature-block reveal">
+      <div class="feature-text">
+        <div class="feature-tag">Control de tareas</div>
+        <h3 class="feature-title">Verificación con QR, GPS y evidencia fotográfica.</h3>
+        <p class="feature-desc">Crea puntos de control, asigna responsables e imprime los códigos QR. Cada escaneo registra hora exacta, foto y ubicación GPS.</p>
+        <ul class="feature-list">
+          <li>Puntos de control con QR imprimibles</li>
+          <li>Registro automático de hora, foto y GPS</li>
+          <li>Alertas inmediatas de incumplimiento</li>
+          <li>Historial auditable por actividad</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-header">
+          <div class="fv-dot"></div><div class="fv-dot"></div><div class="fv-dot"></div>
+          <div class="fv-title">Control de tareas — Planta Principal</div>
+        </div>
+        <div class="feature-visual-body">
+          <div class="qr-grid">
+            <div class="qr-card">
+              <div class="qr-card-title">Turno</div>
+              <div class="qr-card-val">08:00</div>
+              <div class="qr-card-sub">Activo · 3 operarios</div>
+            </div>
+            <div class="qr-card">
+              <div class="qr-card-title">Cumplimiento</div>
+              <div class="qr-card-val" style="color:var(--green);">92%</div>
+              <div class="qr-card-sub">↑ vs ayer</div>
+            </div>
+          </div>
+          <div class="qr-event">
+            <div class="qr-event-dot" style="background:#4ACBA0"></div>
+            <div class="qr-event-text">Limpieza Zona A — Carlos R. · 📍 GPS</div>
+            <div class="qr-event-time">08:42</div>
+          </div>
+          <div class="qr-event">
+            <div class="qr-event-dot" style="background:#4ACBA0"></div>
+            <div class="qr-event-text">Inspección Sector B3 — María L. · 📷</div>
+            <div class="qr-event-time">09:15</div>
+          </div>
+          <div class="qr-event">
+            <div class="qr-event-dot" style="background:#F59E0B"></div>
+            <div class="qr-event-text">Control inventario — Juan P. · En curso</div>
+            <div class="qr-event-time">09:58</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F2: Geocercas -->
+    <div class="feature-block reverse reveal">
+      <div class="feature-text">
+        <div class="feature-tag">Geocercas & Monitoreo Live</div>
+        <h3 class="feature-title">Siga a cada colaborador en tiempo real.</h3>
+        <p class="feature-desc">Define zonas virtuales y monitorea entradas y salidas. Vea la posición exacta de cada persona en un mapa detallado.</p>
+        <ul class="feature-list">
+          <li>Geocercas virtuales con alertas de entrada/salida</li>
+          <li>Monitoreo live en mapa detallado</li>
+          <li>Botón de asistencia — alerta por SMS, llamada y email</li>
+          <li>Análisis de rutas y tiempo por zona</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-header">
+          <div class="fv-dot"></div><div class="fv-dot"></div><div class="fv-dot"></div>
+          <div class="fv-title">Monitoreo Live — 3 activos</div>
+        </div>
+        <div class="feature-visual-body">
+          <div class="map-ui">
+            <div class="map-ui-grid"></div>
+            <div class="map-ui-pin" style="top:25%;left:22%;background:var(--green);">C</div>
+            <div class="map-ui-label" style="top:calc(25% + 26px);left:18%;">Carlos R.</div>
+            <div class="map-ui-pin" style="top:55%;left:58%;background:var(--teal);">M</div>
+            <div class="map-ui-label" style="top:calc(55% + 26px);left:54%;">María L.</div>
+            <div class="map-ui-pin" style="top:72%;left:38%;background:var(--amber);">J</div>
+            <div class="map-ui-label" style="top:calc(72% + 26px);left:34%;">Juan P.</div>
+            <div style="position:absolute;top:8px;right:10px;background:rgba(74,203,160,.15);border:1px solid rgba(74,203,160,.3);border-radius:6px;padding:5px 10px;font-size:11px;color:#4ACBA0;font-weight:600;">● Live</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="background:var(--green-pale);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--green);font-weight:600;">📍 3 en campo</div>
+            <div style="background:#FEF3C7;border-radius:8px;padding:8px 12px;font-size:12px;color:#92400E;font-weight:600;">⏱ 2h 14m promedio</div>
+            <div style="background:#F0FDF4;border-radius:8px;padding:8px 12px;font-size:12px;color:#166534;font-weight:600;">✓ Todas en zona</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F3: Chat operativo -->
+    <div class="feature-block reveal">
+      <div class="feature-text">
+        <div class="feature-tag">Chat operativo integrado</div>
+        <h3 class="feature-title">Comunicación y seguimiento en una sola app.</h3>
+        <p class="feature-desc">Canales empresariales, grupos operativos y mensajes directos — con geolocalización en cada mensaje y estados de hilo.</p>
+        <ul class="feature-list">
+          <li>Canales por proyecto, zona o turno</li>
+          <li>Cada mensaje georreferenciado</li>
+          <li>Hilos con estado: Abierto / Completado / Cerrado</li>
+          <li>Formularios publicados directo al chat</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-header">
+          <div class="fv-dot"></div><div class="fv-dot"></div><div class="fv-dot"></div>
+          <div class="fv-title"># turno-mañana</div>
+        </div>
+        <div class="feature-visual-body">
+          <div class="chat-messages">
+            <div class="chat-msg in">
+              <div class="chat-avatar" style="background:var(--teal);">C</div>
+              <div>
+                <div class="chat-bubble">Zona norte limpia, pasé los 4 puntos de control ✓</div>
+                <div class="chat-geo" style="color:var(--text3);font-size:10px;margin-top:3px;margin-left:4px;">📍 Lat 4.61, Lng -74.08 · 08:47</div>
+              </div>
+            </div>
+            <div class="chat-msg out">
+              <div class="chat-avatar" style="background:var(--green);">S</div>
+              <div>
+                <div class="chat-bubble">Perfecto. Ahora pasa por sector B antes de las 10.</div>
+                <div class="chat-geo" style="color:rgba(255,255,255,.4);font-size:10px;margin-top:3px;margin-right:4px;text-align:right;">08:49</div>
+              </div>
+            </div>
+            <div class="chat-msg in">
+              <div class="chat-avatar" style="background:var(--amber);">M</div>
+              <div>
+                <div class="chat-bubble">📋 Formulario enviado — Inspección Sector A <br><span style="font-size:11px;opacity:.7;">Estado: Completado ✓</span></div>
+                <div class="chat-geo" style="color:var(--text3);font-size:10px;margin-top:3px;margin-left:4px;">📍 09:03</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F4: Formularios -->
+    <div class="feature-block reverse reveal">
+      <div class="feature-text">
+        <div class="feature-tag">Formularios dinámicos</div>
+        <h3 class="feature-title">Captura de datos inteligente, trazable y automatizada.</h3>
+        <p class="feature-desc">Formularios con lógica condicional que se adaptan al flujo. Respuestas que activan alertas y se publican en el canal correcto.</p>
+        <ul class="feature-list">
+          <li>Lógica condicional — preguntas adaptativas</li>
+          <li>Notificaciones automáticas por eventos específicos</li>
+          <li>Publicación directa al chat en tiempo real</li>
+          <li>Exporta a PDF listo para auditorías</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-header">
+          <div class="fv-dot"></div><div class="fv-dot"></div><div class="fv-dot"></div>
+          <div class="fv-title">Inspección de Calidad — F-07</div>
+        </div>
+        <div class="feature-visual-body">
+          <div class="form-ui">
+            <div class="form-field">
+              <div class="form-field-label">Zona inspeccionada</div>
+              <div class="form-field-val filled">Sector B — Edificio Principal</div>
+            </div>
+            <div class="form-field">
+              <div class="form-field-label">Estado de equipos</div>
+              <div class="form-field-val filled">✓ Operativos (4/4)</div>
+            </div>
+            <div class="form-field">
+              <div class="form-field-label">Evidencia fotográfica</div>
+              <div class="form-field-val filled">📷 3 fotos adjuntas · GPS verificado</div>
+            </div>
+            <div class="form-field" style="border-color: var(--amber);">
+              <div class="form-field-label" style="color:var(--amber);">Observación</div>
+              <div class="form-field-val">Fuga leve en válvula V-3...</div>
+            </div>
+          </div>
+          <div class="form-progress">
+            <div class="form-prog-dot done"></div>
+            <div class="form-prog-dot done"></div>
+            <div class="form-prog-dot done"></div>
+            <div class="form-prog-dot active"></div>
+            <div class="form-prog-dot"></div>
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:var(--text3);">Paso 4 de 5 · Alerta automática activada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div class="industries-inner">
+    <div class="industries-header">
+      <div class="reveal">
+        <div class="section-eyebrow">Industrias</div>
+        <h2 class="section-headline">Construido para donde ocurre<br>el trabajo real.</h2>
+      </div>
+      <a href="#" style="font-size:14px;font-weight:600;color:var(--green);text-decoration:none;display:flex;align-items:center;gap:6px;" class="reveal">
+        Ver todas las industrias →
+      </a>
+    </div>
+    <div class="industry-grid reveal">
+      <a class="industry-card" href="#">
+        <div class="industry-icon">🌾</div>
+        <div class="industry-name">Agricultura</div>
+        <div class="industry-desc">Fincas, agroindustria y cultivos</div>
+      </a>
+      <a class="industry-card" href="#">
+        <div class="industry-icon">🚛</div>
+        <div class="industry-name">Logística</div>
+        <div class="industry-desc">Rutas, distribución y flota</div>
+      </a>
+      <a class="industry-card" href="#">
+        <div class="industry-icon">🛡️</div>
+        <div class="industry-name">Seguridad</div>
+        <div class="industry-desc">Vigilancia y control de rondas</div>
+      </a>
+      <a class="industry-card" href="#">
+        <div class="industry-icon">🏪</div>
+        <div class="industry-name">Retail</div>
+        <div class="industry-desc">Servicios y puntos de venta</div>
+      </a>
+      <a class="industry-card" href="#">
+        <div class="industry-icon">🏭</div>
+        <div class="industry-name">Manufactura</div>
+        <div class="industry-desc">Producción e industria</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testimonials-inner">
+    <div class="testi-header reveal">
+      <div class="section-eyebrow">Testimonios</div>
+      <h2 class="section-headline">Lo que dicen nuestros clientes.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-quote">Antes coordinábamos todo por WhatsApp y llamadas. Hoy tenemos trazabilidad completa de cada ronda, con foto y GPS. Nuestros clientes nos exigen evidencia y ahora la tenemos.</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--green);">AR</div>
+          <div>
+            <div class="testi-name">Andrés Rodríguez</div>
+            <div class="testi-role">Director de Operaciones · SecureGroup</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-quote">Implementamos InOut Control en 3 fincas y en 2 semanas ya veíamos el impacto. Los supervisores tienen visibilidad real, los reportes salen solos y el equipo se volvió más disciplinado.</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--teal);">CP</div>
+          <div>
+            <div class="testi-name">Camila Pérez</div>
+            <div class="testi-role">Gerente Agrícola · AgroSur</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-3">
+        <div class="testi-quote">Lo que más valoro es que funciona sin internet. Nuestros conductores están en zonas sin señal y los registros se sincronizan solos cuando recuperan conexión. Sin eso no podríamos usarlo.</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--amber);">MG</div>
+          <div>
+            <div class="testi-name">Miguel García</div>
+            <div class="testi-role">Jefe de Logística · DistriCo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-inner">
+    <div class="reveal" style="margin-bottom: 56px;">
+      <div class="section-eyebrow" style="color:#4ACBA0;">En números</div>
+      <h2 class="section-headline" style="color:#fff;">Si pasó en el campo,<br>está en el sistema.</h2>
+    </div>
+    <div class="stats-grid">
+      <div class="reveal reveal-delay-1" style="text-align:center;">
+        <div class="stat-val"><span>+</span>30</div>
+        <div class="stat-label">Empresas activas confiando en la plataforma</div>
+      </div>
+      <div class="reveal reveal-delay-2" style="text-align:center;">
+        <div class="stat-val"><span>+</span>4</div>
+        <div class="stat-label">Países en América Latina y Europa</div>
+      </div>
+      <div class="reveal reveal-delay-3" style="text-align:center;">
+        <div class="stat-val">100<span>%</span></div>
+        <div class="stat-label">Cloud — sin servidores, sin instalación</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta-final">
+  <div class="cta-inner">
+    <div class="reveal">
+      <h2 class="cta-headline">Vea InOut Control en<br>su propia operación.</h2>
+      <p class="cta-sub">Un especialista le muestra cómo funciona para su industria, configura su cuenta y lo deja listo en 48 horas.</p>
+      <a href="#" class="btn-white">
+        Solicitar demo gratuita
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="cta-reassure">Sin tarjeta de crédito · Sin compromiso · Configuración en 48 horas</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="nav-logo" href="#" style="margin-bottom:0">
+          <div class="nav-logo-mark">
+            <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.5" fill="white"/><path d="M10 3V1M10 19v-2M3 10H1M19 10h-2M4.93 4.93l-1.41-1.41M16.48 16.48l-1.41-1.41M4.93 15.07l-1.41 1.41M16.48 3.52l-1.41 1.41" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <span class="nav-logo-text" style="color:#fff;">InOut Control</span>
+        </a>
+        <p>Plataforma 100% en línea para trazabilidad de equipos y operaciones en campo.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <div class="footer-col-title">Producto</div>
+          <ul class="footer-link-list">
+            <li><a href="#">Funcionalidades</a></li>
+            <li><a href="#">Cómo funciona</a></li>
+            <li><a href="#">Precios</a></li>
+            <li><a href="#">Solicitar demo</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Industrias</div>
+          <ul class="footer-link-list">
+            <li><a href="#">Agricultura</a></li>
+            <li><a href="#">Logística</a></li>
+            <li><a href="#">Seguridad</a></li>
+            <li><a href="#">Manufactura</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Empresa</div>
+          <ul class="footer-link-list">
+            <li><a href="#">Acerca de</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">Soporte</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 InOut Control. Todos los derechos reservados.</div>
+      <div class="footer-langs">
+        <button class="footer-lang active">ES</button>
+        <button class="footer-lang">EN</button>
+        <button class="footer-lang">FR</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 20 ? '0 4px 24px rgba(0,0,0,.08)' : 'none';
+  });
+
+  // Language buttons
+  document.querySelectorAll('.footer-lang').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.footer-lang').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Countup for stats
+  function countUp(el, target, suffix='', prefix='') {
+    let start = 0;
+    const step = target / 40;
+    const timer = setInterval(() => {
+      start = Math.min(start + step, target);
+      el.innerHTML = prefix + Math.round(start) + suffix;
+      if (start >= target) clearInterval(timer);
+    }, 30);
+  }
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const vals = e.target.querySelectorAll('.stat-val');
+        vals[0] && countUp(vals[0], 30, '', '<span>+</span>');
+        vals[1] && countUp(vals[1], 4, '', '<span>+</span>');
+        vals[2] && countUp(vals[2], 100, '<span>%</span>');
+        statsObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  const statsSection = document.getElementById('stats');
+  if (statsSection) statsObserver.observe(statsSection);
+</script>
+</body>
+</html>
